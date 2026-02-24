@@ -20,16 +20,26 @@ app = FastAPI(title="Personix AI Dataset API")
 # -------------------------------------------------
 # START BACKGROUND WORKER
 # -------------------------------------------------
-def start_worker():
-    print("Starting dataset request worker...")
-    request_worker.main()
+# def start_worker():
+#     print("Starting dataset request worker...")
+#     request_worker.main()
 
+# @app.on_event("startup")
+# def launch_worker():
+#     thread = threading.Thread(target=start_worker)
+#     thread.daemon = True
+#     thread.start()
 @app.on_event("startup")
-def launch_worker():
-    thread = threading.Thread(target=start_worker)
-    thread.daemon = True
-    thread.start()
+async def start_background_services():
 
+    # start monitoring system
+    asyncio.create_task(monitoring_loop())
+
+    # start dataset worker
+    threading.Thread(
+        target=start_worker,
+        daemon=True
+    ).start()
 # -------------------------------------------------
 # CORS FIX
 # -------------------------------------------------
