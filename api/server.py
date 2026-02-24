@@ -1,7 +1,7 @@
 import threading
 import time
 from workers import request_worker
-
+from workers.request_worker import start_worker
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, HTTPException
 from pathlib import Path
@@ -156,10 +156,12 @@ app.include_router(admin_router)
 # -------------------------------------------------
 # HEALTH
 # -------------------------------------------------
-@app.get("/health")
+# @app.get("/health")
+# def health():
+#     return {"status": "ok"}
+@app.get("/health", include_in_schema=False)
 def health():
     return {"status": "ok"}
-
 # -------------------------------------------------
 # MONITORING
 # -------------------------------------------------
@@ -168,15 +170,15 @@ def health():
 #     asyncio.create_task(monitoring_loop())
 @app.on_event("startup")
 async def start_background_services():
+
     asyncio.create_task(monitoring_loop())
 
     # START DATASET WORKER
     threading.Thread(
-        target=lambda: __import__("workers.request_worker"),
+        target=start_worker,
         daemon=True
     ).start()
 
-    
 # import threading
 # import time
 # from workers.request_worker import get_pending_requests

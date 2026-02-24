@@ -1,46 +1,26 @@
 import os
 import sys
+import time
+import subprocess
 from pathlib import Path
-import random
+from api.db import supabase
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.append(str(PROJECT_ROOT))
 
-import time
-from pathlib import Path
-from api.db import supabase
-import subprocess
-import sys
-from datetime import datetime, timedelta
-# import random
-
 CHECK_INTERVAL = 15  # seconds
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
-print(" Dataset Request Worker Started")
-# import sys
-# from pathlib import Path
-
-# PROJECT_ROOT = Path(__file__).resolve().parents[1]
-# sys.path.append(str(PROJECT_ROOT))
-
-# import time
-# from api.db import supabase
-# import subprocess
-# from datetime import datetime
-
-
-# CHECK_INTERVAL = 15
-
-# print("Dataset Request Worker Started")
 
 def get_pending_requests():
-    res = supabase.table("dataset_requests") \
-        .select("*") \
-        .eq("status", "pending") \
-        .limit(1) \
+    res = (
+        supabase.table("dataset_requests")
+        .select("*")
+        .eq("status", "pending")
+        .limit(1)
         .execute()
+    )
     return res.data
+
 
 def mark_processing(request_id):
     supabase.table("dataset_requests") \
@@ -48,82 +28,225 @@ def mark_processing(request_id):
         .eq("request_id", request_id) \
         .execute()
 
+
 def mark_waiting(request_id):
     supabase.table("dataset_requests") \
         .update({"status": "waiting_generation"}) \
         .eq("request_id", request_id) \
         .execute()
 
+
 def check_stock(gender, age_bucket, count):
-    res = supabase.table("stock_levels") \
-        .select("available_count") \
-        .eq("gender", gender) \
-        .eq("age_bucket", age_bucket) \
+
+    res = (
+        supabase.table("stock_levels")
+        .select("available_count")
+        .eq("gender", gender)
+        .eq("age_bucket", age_bucket)
         .execute()
+    )
 
     if not res.data:
-        print(f"No inventory bucket yet for {gender}_{age_bucket}")
+        print(f"No inventory bucket yet for {gender}_{age_bucket}", flush=True)
         return False
 
     return res.data[0]["available_count"] >= count
 
-while True:
 
-    jobs = get_pending_requests()
+def start_worker():
 
-    if not jobs:
-        print("No pending dataset requests", flush=True)
+    print("🚀 Dataset Request Worker Started", flush=True)
+
+    while True:
+
+        jobs = get_pending_requests()
+
+        if not jobs:
+            print("No pending dataset requests", flush=True)
+            time.sleep(CHECK_INTERVAL)
+            continue
+
+        job = jobs[0]
+
+        request_id = job["request_id"]
+        gender = job["gender"]
+        age_bucket = job["age_bucket"]
+        count = job["count"]
+
+        print(
+            f"Processing request {request_id} → {gender}_{age_bucket} x{count}",
+            flush=True
+        )
+
+        if not check_stock(gender, age_bucket, count):
+
+            print("Not enough inventory — waiting for generator", flush=True)
+
+            mark_waiting(request_id)
+
+            time.sleep(CHECK_INTERVAL)
+
+            continue
+
+        # mark processing
+        mark_processing(request_id)
+
+        env = dict(os.environ)
+        env["PYTHONPATH"] = str(PROJECT_ROOT)
+
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(PROJECT_ROOT / "scripts" / "package_dataset.py"),
+                request_id,
+                gender,
+                age_bucket,
+                str(count),
+            ],
+            capture_output=True,
+            text=True,
+            env=env,
+        )
+
+        print(result.stdout, flush=True)
+        print(result.stderr, flush=True)
+
+        if result.returncode != 0:
+
+            print("Packaging failed — reverting to pending", flush=True)
+
+            supabase.table("dataset_requests") \
+                .update({"status": "pending"}) \
+                .eq("request_id", request_id) \
+                .execute()
+
         time.sleep(CHECK_INTERVAL)
-        continue
+# import os
+# import sys
+# from pathlib import Path
+# import random
 
-    job = jobs[0]
-    request_id = job["request_id"]
-    gender = job["gender"]
-    age_bucket = job["age_bucket"]
-    count = job["count"]
+# PROJECT_ROOT = Path(__file__).resolve().parents[1]
+# sys.path.append(str(PROJECT_ROOT))
 
-    print(f"\nProcessing request {request_id} → {gender}_{age_bucket} x{count}")
+# import time
+# from pathlib import Path
+# from api.db import supabase
+# import subprocess
+# import sys
+# from datetime import datetime, timedelta
+# # import random
 
-    if not check_stock(gender, age_bucket, count):
-        print("Not enough inventory — waiting for generator")
-        mark_waiting(request_id)
-        time.sleep(CHECK_INTERVAL)
-        continue
+# CHECK_INTERVAL = 15  # seconds
+# PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
-    # reserve job
-    mark_processing(request_id)
+# print(" Dataset Request Worker Started")
+# # import sys
+# # from pathlib import Path
 
-    # NEW: pass request_id to packager
-    env = dict(os.environ)
-    env["PYTHONPATH"] = str(PROJECT_ROOT)
+# # PROJECT_ROOT = Path(__file__).resolve().parents[1]
+# # sys.path.append(str(PROJECT_ROOT))
 
-    result = subprocess.run(
-        [
-            sys.executable,
-            str(PROJECT_ROOT / "scripts" / "package_dataset.py"),
-            request_id,
-            gender,
-            age_bucket,
-            str(count)
-        ],
-        capture_output=True,
-        text=True,
-        env=env
-    )
+# # import time
+# # from api.db import supabase
+# # import subprocess
+# # from datetime import datetime
 
-    print(result.stdout)
-    print(result.stderr)
 
-    # If packager crashes → revert job
-    if result.returncode != 0:
-        print("Packaging failed — reverting to pending")
+# # CHECK_INTERVAL = 15
 
-        supabase.table("dataset_requests") \
-            .update({"status": "pending"}) \
-            .eq("request_id", request_id) \
-            .execute()
+# # print("Dataset Request Worker Started")
 
-    time.sleep(CHECK_INTERVAL)
+# def get_pending_requests():
+#     res = supabase.table("dataset_requests") \
+#         .select("*") \
+#         .eq("status", "pending") \
+#         .limit(1) \
+#         .execute()
+#     return res.data
+
+# def mark_processing(request_id):
+#     supabase.table("dataset_requests") \
+#         .update({"status": "processing"}) \
+#         .eq("request_id", request_id) \
+#         .execute()
+
+# def mark_waiting(request_id):
+#     supabase.table("dataset_requests") \
+#         .update({"status": "waiting_generation"}) \
+#         .eq("request_id", request_id) \
+#         .execute()
+
+# def check_stock(gender, age_bucket, count):
+#     res = supabase.table("stock_levels") \
+#         .select("available_count") \
+#         .eq("gender", gender) \
+#         .eq("age_bucket", age_bucket) \
+#         .execute()
+
+#     if not res.data:
+#         print(f"No inventory bucket yet for {gender}_{age_bucket}")
+#         return False
+
+#     return res.data[0]["available_count"] >= count
+
+# while True:
+
+#     jobs = get_pending_requests()
+
+#     if not jobs:
+#         print("No pending dataset requests", flush=True)
+#         time.sleep(CHECK_INTERVAL)
+#         continue
+
+#     job = jobs[0]
+#     request_id = job["request_id"]
+#     gender = job["gender"]
+#     age_bucket = job["age_bucket"]
+#     count = job["count"]
+
+#     print(f"\nProcessing request {request_id} → {gender}_{age_bucket} x{count}")
+
+#     if not check_stock(gender, age_bucket, count):
+#         print("Not enough inventory — waiting for generator")
+#         mark_waiting(request_id)
+#         time.sleep(CHECK_INTERVAL)
+#         continue
+
+#     # reserve job
+#     mark_processing(request_id)
+
+#     # NEW: pass request_id to packager
+#     env = dict(os.environ)
+#     env["PYTHONPATH"] = str(PROJECT_ROOT)
+
+#     result = subprocess.run(
+#         [
+#             sys.executable,
+#             str(PROJECT_ROOT / "scripts" / "package_dataset.py"),
+#             request_id,
+#             gender,
+#             age_bucket,
+#             str(count)
+#         ],
+#         capture_output=True,
+#         text=True,
+#         env=env
+#     )
+
+#     print(result.stdout)
+#     print(result.stderr)
+
+#     # If packager crashes → revert job
+#     if result.returncode != 0:
+#         print("Packaging failed — reverting to pending")
+
+#         supabase.table("dataset_requests") \
+#             .update({"status": "pending"}) \
+#             .eq("request_id", request_id) \
+#             .execute()
+
+#     time.sleep(CHECK_INTERVAL)
 
 # import sys
 # from pathlib import Path
