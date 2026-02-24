@@ -163,10 +163,20 @@ def health():
 # -------------------------------------------------
 # MONITORING
 # -------------------------------------------------
+# @app.on_event("startup")
+# async def start_monitoring():
+#     asyncio.create_task(monitoring_loop())
 @app.on_event("startup")
-async def start_monitoring():
+async def start_background_services():
     asyncio.create_task(monitoring_loop())
 
+    # START DATASET WORKER
+    threading.Thread(
+        target=lambda: __import__("workers.request_worker"),
+        daemon=True
+    ).start()
+
+    
 # import threading
 # import time
 # from workers.request_worker import get_pending_requests
