@@ -1,0 +1,106 @@
+venv/
+node_modules/
+__pycache__/
+.env
+*.pyc
+*.pyo
+*.pyd
+logs/
+delivered_datasets/
+models/
+notebooks/
+token.json
+token.pickle
+credentials.json
+credentials/
+.vscode/
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environment secrets
+.env
+token.json
+token.pickle
+credentials.json
+credentials/
+
+# Logs
+logs/
+
+# ML models
+models/
+
+# datasets
+faces/
+delivered_datasets/
+
+# notebooks
+notebooks/
+
+# node
+node_modules/
+
+# vscode
+.vscode/
+
+# system files
+.DS_Store
+Thumbs.
+
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Secrets
+.env
+credentials/
+token.json
+token.pickle
+
+# Logs
+logs/
+
+# Models
+models/*
+
+# Dataset images
+faces/*
+
+# Generated datasets
+delivered_datasets/*
+
+# Notebooks
+notebooks/
+
+# Node modules
+node_modules/
+
+# Experimental frontend folders
+personix-frontend/src1/
+personix-frontend/src12/
+
+# VS Code
+.vscode/
+# OAuth credentials
+client_secret_*.json
+credentials.json
+credentials/
+
+client_secret_*.json
+credentials.json
+credentials/
+
+.env
+client_secret_*.json
+credentials.json
+credentials/
+venv/
+node_modules/
+faces/*
+delivered_datasets/*
+models/*

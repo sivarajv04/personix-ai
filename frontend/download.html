@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Download Dataset</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="navbar">
+    <div class="nav-brand">PERSONIX AI</div>
+    <nav>
+        <a href="index.html">Request</a>
+        <a href="track.html">Track</a>
+        <a href="download.html">Download</a>
+    </nav>
+</header>
+
+<h1>Download Dataset</h1>
+
+<div class="container">
+    <div class="card">
+        <h1>Download Dataset</h1>
+
+        <label>Request ID</label>
+        <input id="rid">
+
+        <label>Passcode</label>
+        <input id="code">
+
+        <button onclick="download()">Download</button>
+
+        <div id="msg" class="result-box"></div>
+    </div>
+</div>
+
+<script src="js/download.js"></script>
+
+<!-- 
+
+<div class="card">
+
+
+<input id="request_id" placeholder="Request ID">
+<input id="code" placeholder="Passcode">
+<button onclick="downloadDataset()">Download</button>
+
+<div id="msg"></div>
+
+
+</div>
+
+<script src="js/download.js"></script> -->
+
+</body>
+</html>

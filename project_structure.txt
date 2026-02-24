@@ -1,0 +1,488 @@
+﻿.
+|-- workers
+|   +-- request_worker.py
+|-- temp_dataset
+|   +-- images
+|       +-- male_18_25
+|-- scripts
+|   |-- upload_refill_request.py
+|   |-- system_audit.py
+|   |-- sync_from_drive.py
+|   |-- refill_inventory.py
+|   |-- quarantine_orphans.py
+|   |-- package_dataset.py
+|   |-- inventory_daemon.py
+|   |-- inspect_inventory.py
+|   |-- generate_faces_gan.py
+|   |-- generate_faces_dummy.py
+|   |-- evaluate_snapshots.py
+|   |-- evaluate_fid.py
+|   |-- classify_faces.py
+|   |-- check_refill_needed.py
+|   +-- build_dataset.py
+|-- samples
+|   +-- network-snapshot-000040
+|-- personix-frontend
+|   |-- src12
+|   |   |-- utils
+|   |   |   |-- validators.js
+|   |   |   |-- format.js
+|   |   |   +-- constants.js
+|   |   |-- routes
+|   |   |   |-- publicRoutes.jsx
+|   |   |   |-- portalRoutes.jsx
+|   |   |   +-- adminRoutes.jsx
+|   |   |-- pages
+|   |   |   |-- Portal.jsx
+|   |   |   |-- Landing.jsx
+|   |   |   |-- Home.jsx
+|   |   |   +-- Admin.jsx
+|   |   |-- features
+|   |   |   |-- track
+|   |   |   |   +-- pages
+|   |   |   |       +-- TrackPage.jsx
+|   |   |   |-- request
+|   |   |   |   +-- pages
+|   |   |   |       +-- RequestPage.jsx
+|   |   |   |-- portal
+|   |   |   |   +-- DatasetRequester.jsx
+|   |   |   |-- orders
+|   |   |   |   |-- pages
+|   |   |   |   |   |-- TrackPage.jsx
+|   |   |   |   |   |-- OrderPage.jsx
+|   |   |   |   |   +-- DownloadPage.jsx
+|   |   |   |   |-- hooks
+|   |   |   |   +-- components
+|   |   |   |-- landing
+|   |   |   |   |-- sections
+|   |   |   |   +-- pages
+|   |   |   |       |-- LandingPage.jsx
+|   |   |   |       +-- Home.jsx
+|   |   |   |-- download
+|   |   |   |   +-- pages
+|   |   |   |       +-- DownloadPage.jsx
+|   |   |   |-- bulk
+|   |   |   |   |-- pages
+|   |   |   |   |   +-- BulkRequest.jsx
+|   |   |   |   +-- components
+|   |   |   +-- admin
+|   |   |       |-- pages
+|   |   |       |   |-- Requests.jsx
+|   |   |       |   |-- Inventory.jsx
+|   |   |       |   |-- Dashboard.jsx
+|   |   |       |   |-- Analytics.jsx
+|   |   |       |   +-- AdminDashboard.jsx
+|   |   |       |-- hooks
+|   |   |       +-- components
+|   |   |-- components
+|   |   |   |-- ui
+|   |   |   |-- layouts
+|   |   |   |   |-- PortalLayout.jsx
+|   |   |   |   +-- MainLayout.jsx
+|   |   |   |-- layout
+|   |   |   |   +-- Navbar.jsx
+|   |   |   +-- feedback
+|   |   |-- assets
+|   |   |   |-- styles
+|   |   |   |-- images
+|   |   |   |-- icons
+|   |   |   +-- react.svg
+|   |   |-- app
+|   |   |   |-- router.jsx
+|   |   |   |-- providers.jsx
+|   |   |   +-- App.jsx
+|   |   |-- api
+|   |   |   |-- dataset.api.js
+|   |   |   |-- client.js
+|   |   |   |-- bulk.api.js
+|   |   |   +-- admin.api.js
+|   |   |-- main.jsx
+|   |   |-- index.css
+|   |   |-- App.jsx
+|   |   +-- App.css
+|   |-- src1
+|   |   |-- styles
+|   |   |   +-- global.css
+|   |   |-- shared
+|   |   |   +-- ui
+|   |   |       |-- Navbar.jsx
+|   |   |       |-- Container.jsx
+|   |   |       +-- Button.jsx
+|   |   |-- layouts
+|   |   |   |-- PortalLayout.jsx
+|   |   |   +-- MainLayout.jsx
+|   |   |-- features
+|   |   |   |-- track
+|   |   |   |   +-- pages
+|   |   |   |       +-- TrackPage.jsx
+|   |   |   |-- request
+|   |   |   |   +-- pages
+|   |   |   |       +-- RequestPage.jsx
+|   |   |   |-- landing
+|   |   |   |   +-- pages
+|   |   |   |       +-- LandingPage.jsx
+|   |   |   |-- download
+|   |   |   |   +-- pages
+|   |   |   |       +-- DownloadPage.jsx
+|   |   |   +-- admin
+|   |   |       +-- pages
+|   |   |           +-- AdminDashboard.jsx
+|   |   |-- app
+|   |   |   +-- router.jsx
+|   |   |-- main.jsx
+|   |   +-- App.jsx
+|   |-- src
+|   |   |-- shared
+|   |   |   |-- ui
+|   |   |   |   +-- Section.jsx
+|   |   |   |-- layout
+|   |   |   |   |-- Section.jsx
+|   |   |   |   |-- MainLayout.jsx
+|   |   |   |   |-- Header.jsx
+|   |   |   |   +-- Footer.jsx
+|   |   |   |-- components
+|   |   |   |   +-- BackendStatus.jsx
+|   |   |   +-- auth
+|   |   |       +-- AdminRoute.jsx
+|   |   |-- layouts
+|   |   |   +-- MainLayout.jsx
+|   |   |-- features
+|   |   |   |-- tools
+|   |   |   |   +-- pages
+|   |   |   |       |-- TrackPage.jsx
+|   |   |   |       |-- RequestPage.jsx
+|   |   |   |       +-- DownloadPage.jsx
+|   |   |   |-- landing
+|   |   |   |   |-- tools
+|   |   |   |   |   |-- TrackCard.jsx
+|   |   |   |   |   |-- RequestCard.jsx
+|   |   |   |   |   +-- DownloadCard.jsx
+|   |   |   |   |-- sections
+|   |   |   |   |   |-- TrustSection.jsx
+|   |   |   |   |   |-- ProductDemo.jsx
+|   |   |   |   |   |-- ProblemSolution.jsx
+|   |   |   |   |   |-- HowItWorks.jsx
+|   |   |   |   |   |-- HeroSection.jsx
+|   |   |   |   |   |-- Features.jsx
+|   |   |   |   |   +-- ApiSection.jsx
+|   |   |   |   +-- pages
+|   |   |   |       +-- LandingPage.jsx
+|   |   |   |-- bulk
+|   |   |   |   |-- pages
+|   |   |   |   |   +-- BulkPage.jsx
+|   |   |   |   +-- components
+|   |   |   |       |-- DatasetRow.jsx
+|   |   |   |       +-- BulkBuilder.jsx
+|   |   |   +-- admin
+|   |   |       |-- sections
+|   |   |       |   |-- SystemMonitor.jsx
+|   |   |       |   |-- Overview.jsx
+|   |   |       |   |-- Inventory.jsx
+|   |   |       |   |-- InstantOrders.jsx
+|   |   |       |   +-- BulkOrders.jsx
+|   |   |       |-- pages
+|   |   |       |   |-- Sidebar.jsx
+|   |   |       |   |-- Overview.jsx
+|   |   |       |   |-- Dashboard.jsx
+|   |   |       |   +-- AdminLogin.jsx
+|   |   |       |-- components
+|   |   |       |   |-- UsageChart.jsx
+|   |   |       |   |-- Topbar.jsx
+|   |   |       |   |-- SystemStatusCard.jsx
+|   |   |       |   |-- StatCard.jsx
+|   |   |       |   |-- Sidebar.jsx
+|   |   |       |   |-- OrdersTable.jsx
+|   |   |       |   +-- BulkOrdersTable.jsx
+|   |   |       +-- api
+|   |   |           +-- admin.js
+|   |   |-- assets
+|   |   |   +-- react.svg
+|   |   |-- api
+|   |   |   |-- system.js
+|   |   |   |-- personixApi.js
+|   |   |   +-- bulk.js
+|   |   |-- router.jsx
+|   |   |-- main.jsx
+|   |   |-- index.css
+|   |   +-- App.jsx
+|   |-- public
+|   |   +-- vite.svg
+|   |-- .vercel
+|   |   |-- README.txt
+|   |   +-- project.json
+|   |-- vite.config.js
+|   |-- tailwind.config.js
+|   |-- src.zip
+|   |-- README.md
+|   |-- postcss.config.js
+|   |-- package-lock.json
+|   |-- package.json
+|   |-- index.html
+|   |-- eslint.config.js
+|   |-- a.py
+|   |-- .gitignore
+|   |-- .env.production
+|   +-- .env
+|-- notebooks
+|   +-- generation_test.ipynb
+|-- models
+|   +-- personix_stylegan64.pkl
+|-- logs
+|   +-- classification.log
+|-- frontend
+|   |-- js
+|   |   |-- track.js
+|   |   |-- request.js
+|   |   |-- download.js
+|   |   +-- api.js
+|   |-- css
+|   |   +-- style.css
+|   |-- track.html
+|   |-- README.md
+|   |-- index.html
+|   +-- download.html
+|-- faces
+|   |-- tmp
+|   |-- male_61_80
+|   |-- male_6_12
+|   |-- male_41_60
+|   |   |-- img_aa08a681.png
+|   |   |-- img_77f5c6e5.png
+|   |   +-- img_2119e1d7.png
+|   |-- male_26_40
+|   |   |-- img_f7aa0954.png
+|   |   |-- img_f71a0904.png
+|   |   |-- img_f6cc5227.png
+|   |   |-- img_f5a14475.png
+|   |   |-- img_f3b04f79.png
+|   |   |-- img_ea113511.png
+|   |   |-- img_e4775347.png
+|   |   |-- img_e3c37203.png
+|   |   |-- img_e3a2bf49.png
+|   |   |-- img_e2e9f357.png
+|   |   |-- img_e034d4d0.png
+|   |   |-- img_dc8a5372.png
+|   |   |-- img_daf8f92b.png
+|   |   |-- img_d48be2b5.png
+|   |   |-- img_d3392c17.png
+|   |   |-- img_d051384f.png
+|   |   |-- img_cd10eb72.png
+|   |   |-- img_c6b92941.png
+|   |   |-- img_c1b9e4c0.png
+|   |   |-- img_ba568786.png
+|   |   |-- img_b100a39b.png
+|   |   |-- img_af99a768.png
+|   |   |-- img_a8179328.png
+|   |   |-- img_a7f0fca7.png
+|   |   |-- img_a5d8321a.png
+|   |   |-- img_a10f837b.png
+|   |   |-- img_a0fdaf02.png
+|   |   |-- img_92d03e69.png
+|   |   |-- img_8fc10939.png
+|   |   |-- img_8ebadc2d.png
+|   |   |-- img_8c8cb9e4.png
+|   |   |-- img_87983d2e.png
+|   |   |-- img_8071bdfc.png
+|   |   |-- img_7f34dc19.png
+|   |   |-- img_7733582b.png
+|   |   |-- img_76149dfc.png
+|   |   |-- img_747f18c5.png
+|   |   |-- img_714c2f55.png
+|   |   |-- img_6e0c3e18.png
+|   |   |-- img_688930cc.png
+|   |   |-- img_6398f9c1.png
+|   |   |-- img_55785e4c.png
+|   |   |-- img_54a84e75.png
+|   |   |-- img_4ddd1ad2.png
+|   |   |-- img_35c9365f.png
+|   |   |-- img_33f56a2c.png
+|   |   |-- img_30a85880.png
+|   |   |-- img_2ea04a5c.png
+|   |   |-- img_2e0773ce.png
+|   |   |-- img_2d6bda21.png
+|   |   |-- img_2c136947.png
+|   |   |-- img_278d876f.png
+|   |   |-- img_27244704.png
+|   |   |-- img_2707cd45.png
+|   |   |-- img_1dfc7662.png
+|   |   |-- img_1ade3cc0.png
+|   |   |-- img_1939919a.png
+|   |   |-- img_13a0b7c0.png
+|   |   |-- img_1193bba3.png
+|   |   +-- img_0599f72b.png
+|   |-- male_18_25
+|   |   |-- img_f5baff95.png
+|   |   |-- img_e736af8c.png
+|   |   |-- img_e054ad55.png
+|   |   |-- img_c9b5925c.png
+|   |   |-- img_be4b80a0.png
+|   |   |-- img_bbb75c20.png
+|   |   |-- img_8f9e0fc0.png
+|   |   |-- img_84550290.png
+|   |   |-- img_81556495.png
+|   |   |-- img_560659b8.png
+|   |   |-- img_50b0fc82.png
+|   |   |-- img_4de5697b.png
+|   |   |-- img_4b66c710.png
+|   |   |-- img_4a62b34a.png
+|   |   |-- img_3bc3822f.png
+|   |   |-- img_3aebcbe1.png
+|   |   |-- img_2cbe01c2.png
+|   |   +-- img_147aeacd.png
+|   |-- male_13_17
+|   |-- male_0_5
+|   |-- female_61_80
+|   |-- female_6_12
+|   |-- female_41_60
+|   |   +-- img_cfca166e.png
+|   |-- female_26_40
+|   |   |-- img_ff940d51.png
+|   |   |-- img_ff396885.png
+|   |   |-- img_fe3bd387.png
+|   |   |-- img_fc5c8ded.png
+|   |   |-- img_f90fad27.png
+|   |   |-- img_ee06d0c6.png
+|   |   |-- img_e881032e.png
+|   |   |-- img_dc863a29.png
+|   |   |-- img_db1fa184.png
+|   |   |-- img_da0a4e98.png
+|   |   |-- img_d9793794.png
+|   |   |-- img_d37d900d.png
+|   |   |-- img_d33127e0.png
+|   |   |-- img_d061c2ed.png
+|   |   |-- img_d05eae52.png
+|   |   |-- img_cfec75f1.png
+|   |   |-- img_ccf51c58.png
+|   |   |-- img_c155a9ef.png
+|   |   |-- img_bace025a.png
+|   |   |-- img_b8cea257.png
+|   |   |-- img_b6a87a92.png
+|   |   |-- img_b5e343fb.png
+|   |   |-- img_b22c07cf.png
+|   |   |-- img_aee6c009.png
+|   |   |-- img_acb577cb.png
+|   |   |-- img_aa2fed84.png
+|   |   |-- img_a405ae1b.png
+|   |   |-- img_a30d6870.png
+|   |   |-- img_9e096d9f.png
+|   |   |-- img_9dec388c.png
+|   |   |-- img_8bf64986.png
+|   |   |-- img_89e9e1f7.png
+|   |   |-- img_8756bb42.png
+|   |   |-- img_7e89b035.png
+|   |   |-- img_7d99926a.png
+|   |   |-- img_79d07aac.png
+|   |   |-- img_767f0408.png
+|   |   |-- img_73b1548d.png
+|   |   |-- img_7191c220.png
+|   |   |-- img_7142d964.png
+|   |   |-- img_6c815676.png
+|   |   |-- img_655caad4.png
+|   |   |-- img_63b86408.png
+|   |   |-- img_5bd6a545.png
+|   |   |-- img_598f1f23.png
+|   |   |-- img_5810808d.png
+|   |   |-- img_57ee7174.png
+|   |   |-- img_579e2f0b.png
+|   |   |-- img_54f22024.png
+|   |   |-- img_542159d6.png
+|   |   |-- img_53cdd7ca.png
+|   |   |-- img_51886cea.png
+|   |   |-- img_451fee4b.png
+|   |   |-- img_298c3aa1.png
+|   |   |-- img_26d60acb.png
+|   |   |-- img_262d646f.png
+|   |   |-- img_2571500b.png
+|   |   |-- img_24ab764a.png
+|   |   |-- img_1cc6e3aa.png
+|   |   |-- img_19eb5817.png
+|   |   |-- img_19602e8e.png
+|   |   |-- img_18fcbdeb.png
+|   |   |-- img_15295b3c.png
+|   |   |-- img_12bfec99.png
+|   |   |-- img_1199bcbf.png
+|   |   |-- img_104c394a.png
+|   |   |-- img_09d312ff.png
+|   |   |-- img_094110c0.png
+|   |   |-- img_03d6caee.png
+|   |   +-- img_015185d1.png
+|   |-- female_18_25
+|   |   +-- img_32ce3022.png
+|   |-- female_13_17
+|   |-- female_0_5
+|   |-- _orphaned
+|   +-- _incoming
+|-- delivered_datasets
+|   |-- req_f1597864_male_26_40.zip
+|   |-- req_a0163a47_male_26_40.zip
+|   |-- req_7333d5a2_male_26_40.zip
+|   |-- req_6c4b56b8_male_18_25.zip
+|   |-- req_45ba94d4_male_26_40.zip
+|   |-- req_303cba57_male_18_25.zip
+|   |-- req_2b559eff_male_26_40.zip
+|   |-- personix_dataset_male_26_40_v1.zip
+|   |-- personix_dataset_male_18_25_v1.zip
+|   |-- del_fd5bd8_male_26_40.zip
+|   |-- del_e9e3bf_female_26_40.zip
+|   |-- del_d2d68b_female_18_25.zip
+|   |-- del_d2ae2b_male_26_40.zip
+|   |-- del_af2b7b_female_18_25.zip
+|   |-- del_9a0280_male_26_40.zip
+|   |-- del_89fd4f_male_26_40.zip
+|   |-- del_81f118_female_26_40.zip
+|   |-- del_7bb17f_male_18_25.zip
+|   |-- del_76cb75_female_18_25.zip
+|   |-- del_760f0b_male_26_40.zip
+|   |-- del_672683_male_26_40.zip
+|   |-- del_5f30fd_male_26_40.zip
+|   |-- del_5b1843_male_26_40.zip
+|   |-- del_5966e6_male_26_40.zip
+|   |-- del_52ac1b_female_26_40.zip
+|   |-- del_2ad867_male_26_40.zip
+|   |-- del_20abff_female_18_25.zip
+|   |-- del_1dadd6_female_26_40.zip
+|   +-- del_01dcd0_male_26_40.zip
+|-- credentials
+|   +-- drive_service_account.json
+|-- backend
+|   |-- main.py
+|   +-- __init__.py
+|-- auth
+|   +-- drive_auth.py
+|-- api
+|   |-- storage
+|   |   +-- r2.py
+|   |-- routes
+|   |   |-- bulk_routes.py
+|   |   +-- admin_routes.py
+|   |-- monitoring
+|   |   |-- time_utils.py
+|   |   |-- metrics_queries.py
+|   |   |-- metrics_collector.py
+|   |   |-- metrics_cache.py
+|   |   +-- health_rules.py
+|   |-- services.py
+|   |-- server.py
+|   |-- schemas.py
+|   |-- db.py
+|   +-- __init__.py
+|-- .zenflow
+|   +-- workflows
+|-- .zencoder
+|   +-- workflows
+|-- .qodo
+|   |-- workflows
+|   +-- agents
+|-- x.ps1
+|-- token.pickle
+|-- token.json
+|-- requirements.txt
+|-- README.md
+|-- project_structure.txt
+|-- package-lock.json
+|-- package.json
+|-- credentials.json
+|-- create_structure.py
+|-- client_secret_790720116377-j9vvj4p6qkib10j6imtfo5ub164idcut.apps.googleusercontent.com.json
+|-- .gitignore
++-- .env
