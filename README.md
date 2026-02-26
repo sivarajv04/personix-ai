@@ -1,17 +1,3 @@
-Below is a **complete, polished README.md** for your repository that includes:
-
-* professional badges
-* overview
-* architecture diagrams
-* AI pipeline
-* API flow
-* installation
-* deployment
-* roadmap
-
-You can **copy-paste this entire file directly into `README.md`** in your repo.
-
----
 
 # 🧠 Personix AI
 
@@ -427,3 +413,4 @@ This project is licensed under the **MIT License**.
 ⭐ If you find this project useful, please **star the repository**.
 
 ---
+
