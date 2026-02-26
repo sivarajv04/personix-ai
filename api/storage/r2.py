@@ -1,19 +1,8 @@
 from api.db import supabase
-from pathlib import Path
-import os
 
 BUCKET = "datasets"
 
-SUPABASE_URL = os.getenv("SUPABASE_URL")
-
-# -------------------------
-# Upload ZIP
-# -------------------------
 def upload_zip(local_path: str, object_key: str):
-    """
-    Upload dataset zip to Supabase Storage
-    object_key example: req_xxxx_male_26_40.zip
-    """
 
     with open(local_path, "rb") as f:
         supabase.storage.from_(BUCKET).upload(
@@ -25,23 +14,14 @@ def upload_zip(local_path: str, object_key: str):
     print(f"[SUPABASE STORAGE] Uploaded -> {object_key}")
 
 
-# -------------------------
-# Generate temporary link
-# -------------------------
 def generate_signed_url(object_key: str, expires: int = 30):
-    """
-    Create short lived download URL
-    """
 
     res = supabase.storage.from_(BUCKET).create_signed_url(
         path=object_key,
         expires_in=expires
     )
 
-    signed_path = res["signedURL"]
-
-    # convert relative path to full URL
-    return f"{SUPABASE_URL}{signed_path}"
+    return res["signedURL"]
 
 # from api.db import supabase
 # from pathlib import Path
